@@ -1,0 +1,95 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+       xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+       xmlns:context="http://www.springframework.org/schema/context"
+       xmlns:aop="http://www.springframework.org/schema/aop"
+       xsi:schemaLocation="http://www.springframework.org/schema/beans
+       http://www.springframework.org/schema/beans/spring-beans.xsd
+       http://www.springframework.org/schema/context
+       http://www.springframework.org/schema/context/spring-context.xsd
+       http://www.springframework.org/schema/aop
+       http://www.springframework.org/schema/aop/spring-aop.xsd">
+
+    <!--<context:component-scan base-package="com.j1823.spring.demo03"/>-->
+
+
+    <!-- 定义实现类 -->
+    <!--<bean id="test" class="com.j1823.spring.demo03.CDao"/>-->
+
+    <!-- 定义切面 -->
+    <!--<bean id="aspect" class="com.j1823.spring.demo03.MAspectJ"/>-->
+
+
+    <!--<bean class="com.j1823.spring.demo02.BeanPost"/>-->
+
+    <!-- 目标对象 -->
+    <!--<bean id="adao" class="com.j1823.spring.demo01.ADao"/>-->
+    <!-- 切面 （前置增强）针对所有方法的切面 -->
+    <!--<bean id="aadvice" class="com.j1823.spring.demo01.AAdvice"/>-->
+    <!--<bean id="aadvice" class="com.j1823.spring.demo01.AAfterAdvice"/>--> <!-- 后置增强 -->
+    <!--<bean id="aadvice" class="com.j1823.spring.demo01.AMethodAdvice"/>--> <!-- 环绕增强 -->
+    <!--<bean id="aadvice" class="com.j1823.spring.demo01.AThrowsAdvice"/> --><!-- 异常增强 -->
+    <!--<bean id="proxyADao" class="org.springframework.aop.framework.ProxyFactoryBean">-->
+    <!--&lt;!&ndash; 配置被代理的对象 &ndash;&gt;-->
+    <!--<property name="target" ref="adao"/>-->
+    <!--&lt;!&ndash; Spring 去选择 JDK动态代理 || CGLib(继承) &ndash;&gt;-->
+    <!--<property name="proxyTargetClass" value="true"/>-->
+    <!--<property name="interceptorNames" value="aadvice"/>-->
+    <!--</bean>-->
+
+    <!--<bean id="bdao" class="com.j1823.spring.demo02.BDao"/>-->
+    <!--<bean id="badvice" class="com.j1823.spring.demo02.BAdvice"/>-->
+
+    <!-- 定义带切点的切面 -->
+    <!--<bean id="badvisor" class="org.springframework.aop.support.RegexpMethodPointcutAdvisor">-->
+    <!--<property name="advice" ref="badvice"/>-->
+    <!--<property name="pattern" value="com\.j1823\.spring\.demo02\.BDao\.add*"/>-->
+    <!--</bean>-->
+
+    <!--<property name="patterns">-->
+    <!--<list>-->
+    <!--<value>com\.j1823\.spring\.demo02\.BDao\.add*</value>-->
+    <!--<value>com\.j1823\.spring\.demo02\.BDao\.del*</value>-->
+    <!--</list>-->
+    <!--</property>-->
+
+    <!--<bean id="proxyBDao" class="org.springframework.aop.framework.ProxyFactoryBean">-->
+    <!--<property name="target" ref="bdao"/>-->
+    <!--<property name="proxyTargetClass" value="true"/>-->
+    <!--<property name="interceptorNames" value="badvisor"/>-->
+    <!--</bean>-->
+
+
+    <!--<bean class="org.springframework.aop.framework.autoproxy.BeanNameAutoProxyCreator">-->
+    <!--<property name="beanNames" value="bdao"/>-->
+    <!--<property name="interceptorNames" value="badvice"/>-->
+    <!--</bean>-->
+
+    <!--<bean class="org.springframework.aop.framework.autoproxy.DefaultAdvisorAutoProxyCreator"/>-->
+
+    <!-- 配置 aspectj 的自动代理 -->
+    <aop:aspectj-autoproxy/>
+
+
+    <bean id="ddao" class="com.j1823.spring.demo04.DDao"/>
+
+    <bean id="daspect" class="com.j1823.spring.demo04.DAspect"/>
+
+    <aop:config>
+        <!-- 定义切点 -->
+        <aop:pointcut id="mpointcut" expression="execution(* com.j1823.spring.demo04.DDao.del(..))"/>
+
+        <aop:pointcut id="mpointcut2" expression="execution(* com.j1823.spring.demo04.DDao.del2(..))"/>
+        <!-- 配置切面 -->
+        <aop:aspect ref="daspect">
+            <!-- 配置切面中的某个方法 method表示增强的类型 -->
+            <aop:before method="before" pointcut-ref="mpointcut"/>
+
+            <aop:after-returning method="afterRun" pointcut-ref="mpointcut2" returning="result"/>
+
+        </aop:aspect>
+
+    </aop:config>
+
+
+</beans>
